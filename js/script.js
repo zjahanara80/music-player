@@ -10,6 +10,12 @@ const prevBtn = document.getElementById("prev");
 const playBtn = document.getElementById("play");
 const nextBtn = document.getElementById("next");
 const background = document.getElementById("background");
+const shuffleBtn = document.getElementById("shuffle");
+const loopBtn = document.getElementById("loop");
+const volumeSlider = document.getElementById("volume");
+
+let isShuffle = false;
+let isLoop = false;
 
 // Music
 const songs = [
@@ -114,10 +120,19 @@ function prevSong() {
 
 // Next Song
 function nextSong() {
-  songIndex++;
-  if (songIndex > songs.length - 1) {
-    songIndex = 0;
+  if (isShuffle) {
+    let randomIndex = Math.floor(Math.random() * songs.length);
+    while (randomIndex === songIndex) {
+      randomIndex = Math.floor(Math.random() * songs.length);
+    }
+    songIndex = randomIndex;
+  } else {
+    songIndex++;
+    if (songIndex > songs.length - 1) {
+      songIndex = 0;
+    }
   }
+
   loadSong(songs[songIndex]);
   playSong();
 }
@@ -164,11 +179,31 @@ function setProgressBar(e) {
 // Event Listeners
 prevBtn.addEventListener("click", prevSong);
 nextBtn.addEventListener("click", nextSong);
-music.addEventListener("ended", nextSong);
+music.addEventListener("ended", () => {
+  if (isLoop) {
+    music.currentTime = 0;
+    playSong();
+  } else {
+    nextSong();
+  }
+});
 music.addEventListener("timeupdate", updateProgressBar);
 progressContainer.addEventListener("click", setProgressBar);
 window.onkeyup = (event) => {
   console.log(event);
   event.code == 'Space' ? playHandler() : event.code == "ArrowRight" ? nextSong() : event.code == "ArrowLeft" ? prevSong() : ""
-  
 }
+shuffleBtn.onclick = () => {
+  isShuffle = !isShuffle;
+  shuffleBtn.classList.toggle("active");
+};
+loopBtn.onclick = () => {
+  isLoop = !isLoop;
+  loopBtn.classList.toggle("active");
+};
+volumeSlider.value = 0.7;
+music.volume = 0.7;
+
+volumeSlider.oninput = (e) => {
+  music.volume = e.target.value;
+};
