@@ -1,6 +1,6 @@
 🎵 Vanilla JavaScript Music Player
 
-![Music Player Preview](./preview.png)
+![Music Player Preview](./preview.PNG)
 
 A simple and fully functional Music Player built with HTML, CSS, and Vanilla JavaScript — without using any external libraries or frameworks.
 
